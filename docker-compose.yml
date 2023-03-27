@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+  app:
+    restart: always
+    build: .
+    command: [ "docker/app.sh" ]
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  celery:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: celery_app
+    command: [ "docker/celery.sh", "celery" ]
+    depends_on:
+      - redis
+  redis:
+    image: redis
+    restart: always
+    command: --port 5370
+    expose:
+      - 5370
+    volumes:
+      - ./:/code/
+  flower:
+    build:
+      context: .
+    env_file:
+      - .env
+    container_name: flower_app
+    command: [ "docker/celery.sh", "flower" ]
+    depends_on:
+      - redis
+      - celery
+    ports:
+      - "5555:5555"
+
+volumes:
+  pg_data:
+    driver: local

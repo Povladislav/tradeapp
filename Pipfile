@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+sqlalchemy = "*"
+alembic = "*"
+fastapi-users = {extras = ["sqlalchemy"], version = "*"}
+asyncpg = "*"
+redis = "*"
+fastapi-cache2 = {extras = ["redis"], version = "*"}
+celery = "*"
+flower = "*"
+jinja2 = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+python_full_version = "3.10.6"
